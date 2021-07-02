@@ -1,55 +1,9 @@
 const puppeteer = require("puppeteer");
-
-const FORM_ID = "1FAIpQLSezLejnMEtJmLFc90X2-_PJWjoPieL4lXgQsU7uo6nNnWDCTQ";
-const ENTRIES = [
-    {
-        id: "357040719",
-        options: ["女", "男"],
-    },
-    {
-        id: "531316100",
-        options: ["15歲以下", "16~18", "16~18", "16~18", "19~29"],
-    },
-    {
-        id: "215160651",
-        options: ["是", "否", "否", "否"],
-    },
-    {
-        id: "97026815",
-        options: ["否"],
-    },
-    {
-        id: "1170631987",
-        options: ["是", "否"],
-    },
-    {
-        id: "302580551",
-        options: ["是", "否"],
-    },
-    {
-        id: "1352058818",
-        options: ["是", "否"],
-    },
-    {
-        id: "496740190",
-        options: ["是", "否"],
-    },
-    {
-        id: "1599054748",
-        options: ["上午十一點", "下午一點", "下午三點", "下午五點"],
-    },
-    {
-        id: "347617688",
-        options: ["半小時內", "半小時到一小時", "一小時到一個半小時", "一個半小時到兩個小時"],
-    },
-];
-const TOTAL = 100;
-const PARALLLEL = 5;
-const SPAN = [15 * 1000, 60 * 1000];
+const { FORM_ID, ENTRIES, TOTAL, PARALLLEL, SPAN } = require("./config.js");
 
 async function main() {
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: ["--disable-web-security", "--disable-features=IsolateOrigins,site-per-process"],
     });
 
@@ -60,7 +14,7 @@ async function main() {
         }
         await Promise.all(tasks);
         console.log(`\n>>>>>> ${i} times have finished. <<<<<<\n`);
-        await sleep(Math.floor(Math.random() * Math.abs(SPAN[0] - (SPAN[1] || SPAN[0])) + Math.min(SPAN)));
+        await sleep(Math.floor(Math.random() * Math.abs(SPAN[0] - (SPAN[1] || SPAN[0])) + Math.min(...SPAN)));
     }
 
     await browser.close();
@@ -85,9 +39,9 @@ async function run(browser) {
     await page.goto(url);
     await page.waitForTimeout(3000);
 
-    while ((await page.$$("div[role=button]")).length > 1) {
-        if ((await page.$$("div[role=button]")).length === 2) await page.click("div[role=button]");
-        else await page.click("div[role=button]:nth-child(2)");
+    while ((await page.$$("div[role=button].appsMaterialWizButtonEl")).length) {
+        let elm = (await page.$$("div[role=button].appsMaterialWizButtonEl"))[(await page.$$("div[role=button].appsMaterialWizButtonEl")).length - 1];
+        await elm.click();
 
         await page.waitForTimeout(3000);
     }
