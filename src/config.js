@@ -42,8 +42,8 @@ const ENTRIES = [
     },
 ];
 const TOTAL = 200;
-const PARALLLEL = 1;
-const SPAN = [30 * 1000, 300 * 1000];
+const PARALLLEL = 2;
+const SPAN = [30 * 1000, 60 * 1000];
 
 exports.FORM_ID = FORM_ID;
 exports.ENTRIES = ENTRIES;
